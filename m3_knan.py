@@ -4,7 +4,7 @@ import mysql.connector
 
 print("-------Hello world!---------")
 print("----------------------------")
-print("Connect to knan project's database")
+#print("Connect to knan project's database")
 
 conn = mysql.connector.connect(
          user='root',
@@ -18,28 +18,41 @@ parser.add_argument("x", help="program action, 1 for showing all tables, 2 for a
 args = parser.parse_args()
 #print(args.echo)
 x = args.x
-print(x)
 # Get all tables into an array
 tables_list = []
 show_db_query = "SHOW TABLES"
 with conn.cursor() as cursor:
     cursor.execute(show_db_query)
     for db in cursor:
-        tables_list.append(db)
-
+        tables_list.append(db[0])
+#print(cursor)
+print(tables_list)
 if args.x == '1':
     print("Showing all tables")
     i=1
     for db in tables_list:
         print(str(i)+", "+str(db))
         i=i+1
-    print("Plz select the tables you want to work with:")
+    print("Plz select the tables you want to display:")
+    s2 = input("Enter argument, 0 for back:")
+    print("*Show "+ str(tables_list[s2-1]) +" tables data schema:")
+    show_table_query = "DESCRIBE "+ str(tables_list[s2-1])
+    with conn.cursor() as cursor:
+        cursor.execute(show_table_query)
+        # Fetch rows from last executed query
+        result = cursor.fetchall()
+        for row in result:
+            print(row)
+    print("*Show table's content:")
+    select_movies_query = "SELECT * FROM "+str(tables_list[s2-1])+" LIMIT 10"
+    #print(select_movies_query)
+    with conn.cursor() as cursor:
+        cursor.execute(select_movies_query)
+        result = cursor.fetchall()
+        for row in result:
+            print(row)
 elif args.x == '2':
     print("Enter new table name")
-
-
-
-
 # create_movies_table_query = """
 # CREATE TABLE movies(
 #     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -64,17 +77,6 @@ elif args.x == '2':
 #     cursor.execute(create_movies_table_query)
 #     conn.commit()
 
-
-
-# print("Show main's tables data schema:")
-# show_table_query = "DESCRIBE main"
-# with conn.cursor() as cursor:
-#     cursor.execute(show_table_query)
-#     # Fetch rows from last executed query
-#     result = cursor.fetchall()
-#     for row in result:
-#         print(row)
-
 #Insert new records to table
 
 # insert_movies_query = """
@@ -85,13 +87,5 @@ elif args.x == '2':
 # """
 # with conn.cursor() as cursor:
 #     cursor.execute(insert_movies_query)
-#     conn.commit()
-print("Show main's table's content:")
-select_movies_query = "SELECT * FROM main LIMIT 10"
-with conn.cursor() as cursor:
-    cursor.execute(select_movies_query)
-    result = cursor.fetchall()
-    for row in result:
-        print(row)
-        
+#     conn.commit()  
 conn.close()
