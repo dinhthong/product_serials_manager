@@ -1,14 +1,44 @@
 # https://realpython.com/python-mysql/
-
+import argparse
 import mysql.connector
+
 print("-------Hello world!---------")
 print("----------------------------")
 print("Connect to knan project's database")
+
 conn = mysql.connector.connect(
          user='root',
          password='cxzzxcCC',
          host='127.0.0.1',
          database='m3_knan')
+
+parser = argparse.ArgumentParser()
+parser.add_argument("x", help="program action, 1 for showing all tables, 2 for adding a new table", default=1)
+#parser.add_argument("2", help="add a new table")
+args = parser.parse_args()
+#print(args.echo)
+x = args.x
+print(x)
+# Get all tables into an array
+tables_list = []
+show_db_query = "SHOW TABLES"
+with conn.cursor() as cursor:
+    cursor.execute(show_db_query)
+    for db in cursor:
+        tables_list.append(db)
+
+if args.x == '1':
+    print("Showing all tables")
+    i=1
+    for db in tables_list:
+        print(str(i)+", "+str(db))
+        i=i+1
+    print("Plz select the tables you want to work with:")
+elif args.x == '2':
+    print("Enter new table name")
+
+
+
 
 # create_movies_table_query = """
 # CREATE TABLE movies(
@@ -33,25 +63,17 @@ conn = mysql.connector.connect(
 # with conn.cursor() as cursor:
 #     cursor.execute(create_movies_table_query)
 #     conn.commit()
-print("Plz select the tables you want to display:")
 
-show_db_query = "SHOW TABLES"
-with conn.cursor() as cursor:
-    cursor.execute(show_db_query)
-    for db in cursor:
-        print(db)
-# # Connect to knan project's database
-# cnx = mysql.connector.connect(user='scott', password='password',
-#                               host='127.0.0.1',
-#                               database='employees')
-print("Show main's tables data schema:")
-show_table_query = "DESCRIBE main"
-with conn.cursor() as cursor:
-    cursor.execute(show_table_query)
-    # Fetch rows from last executed query
-    result = cursor.fetchall()
-    for row in result:
-        print(row)
+
+
+# print("Show main's tables data schema:")
+# show_table_query = "DESCRIBE main"
+# with conn.cursor() as cursor:
+#     cursor.execute(show_table_query)
+#     # Fetch rows from last executed query
+#     result = cursor.fetchall()
+#     for row in result:
+#         print(row)
 
 #Insert new records to table
 
