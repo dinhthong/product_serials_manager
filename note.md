@@ -19,3 +19,5 @@ Unique checking
 + Insert new row to the table and refresh ok -> done
 Creating Multiple Entry Boxes Automatically - Python Tkinter GUI Tutorial #65
 https://www.youtube.com/watch?v=H3Cjtm6NuaQ&ab_channel=Codemy.com
++ Get table's column name in Python
+https://stackoverflow.com/questions/34214031/how-to-get-table-column-name-header-for-sql-query-in-python

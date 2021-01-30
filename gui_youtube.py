@@ -158,22 +158,26 @@ myresult = cursor.fetchall()
 # get table's number of columns
 table_col_size = len(myresult)
 print("There's "+str(table_col_size)+" rows in this table")
-# add column names to a list
-for x in myresult:
-    print(x)
-print("Query Excecuted successfully")
 
-print("*Show table's content:")
+# for x in myresult:
+#     print(x)
+# print("Query Excecuted successfully")
 table_query = "SELECT * FROM "+table_name
 
 cursor.execute(table_query)
 myresult = cursor.fetchall()
+
+
 table_row_size = cursor.rowcount
 print("There's "+str(table_row_size)+" rows in this table")
 
-for x in myresult:
-    print(x)
-print("Query Excecuted successfully")
+# for x in myresult:
+#     print(x)
+# print("Query Excecuted successfully")
+
+print("******")
+column_titles = [i[0] for i in cursor.description]
+print(column_titles)
 
 root = Tk()
 
@@ -257,16 +261,23 @@ btn = Button(wrapper2, text="Search", command=search)
 btn.pack(side=tk.LEFT, padx=6) 
 
 # create new record wrapper
+# multiple entry boxes
 my_entries = []
-for x in range(table_col_size-1):
+for cnt in range(table_col_size-1):
+    print(cnt)
+    print(str(column_titles[cnt]))
+    # Label each entry box
+    label_entry = tk.Label(wrapper3, text =str(column_titles[cnt]))
+    label_entry.grid(row = 0, column = cnt, pady=20, padx=5)
+    #lbl.pack(side=tk.LEFT, padx=10)
     my_entry=Entry(wrapper3)
-    my_entry.grid(row=0, column=x, pady=20, padx=5)
+    my_entry.grid(row=1, column=cnt, pady=20, padx=5)
     my_entries.append(my_entry)
 
 submitrecordButton = tk.Button(wrapper3, text ="ADD", 
                        bg ='blue', command = add_new_record)
 
-submitrecordButton.grid(row = 1, column=0, pady = 20)
+submitrecordButton.grid(row = 2, column=0, pady = 20)
 
 
 root.title("My Application")
