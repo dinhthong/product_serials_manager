@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+#python 2.7
 # import Tkinter
 # top = Tkinter.Tk()
 # # Code to add widgets will go here...
@@ -22,6 +23,9 @@ def descb_table():
          
         # Printing the result of the
         # query
+        #get table's number of columns
+        table_col_size = len(myresult)
+        print(table_col_size)
         for x in myresult:
             print(x)
         print("Query Excecuted successfully")
@@ -31,13 +35,14 @@ def descb_table():
         print("Error occured")
   
 def show_table():
+
     print("*Show table's content:")
     select_movies_query = "SELECT * FROM "+table_name+" LIMIT 10"
 
     try:
         cursor.execute(select_movies_query)
         myresult = cursor.fetchall()
-        
+
         # Printing the result of the
         # query
         for x in myresult:
@@ -86,7 +91,7 @@ def logintodb(user, passw):
 root = tk.Tk()
 root.geometry("500x500")
 root.title("DINH THONG EXPERIMENT")
-  
+
 # Definging the first row
 lblfrstrow = tk.Label(root, text ="Username -", )
 lblfrstrow.place(x = 50, y = 20)
