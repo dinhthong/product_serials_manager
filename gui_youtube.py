@@ -8,7 +8,7 @@ import ttk
 import mysql.connector
 
 table_name ="main"
-displayed_columns="id, device, pcb_main, c_oled"
+displayed_columns="device, pcb_main, c_sensor ,c_oled, note"
 global cursor
 
 # def insertVariblesIntoTable(id, name, price, purchase_date):
@@ -157,7 +157,7 @@ myresult = cursor.fetchall()
 # Printing the result of the query
 # get table's number of columns
 table_col_size = len(myresult)
-print("There's "+str(table_col_size)+" rows in this table")
+print("There's "+str(table_col_size)+" cols in this table")
 
 # for x in myresult:
 #     print(x)
@@ -191,14 +191,19 @@ wrapper1.pack(fill="both", expand="yes", padx=20, pady=10)
 wrapper2.pack(fill="both", expand="yes", padx=20, pady=10)
 wrapper3.pack(fill="both", expand="yes", padx=20, pady=10)
 # height = number of rows to show in one view
-trv=ttk.Treeview(wrapper1, column=(1,2,3,4), show="headings", height="5")
+trv=ttk.Treeview(wrapper1, show="headings", height="5")
+#print(list(range(1,table_col_size)))
+# specify column size based on actual table's column size
+trv["column"] = list(range(1,table_col_size))
 trv.pack(side=LEFT) 
 trv.place(x=0, y=0)
 
-trv.heading(1, text="Customer ID")
-trv.heading(2, text="First Name")
-trv.heading(3, text="Last Name")
-trv.heading(4, text="Age")
+for cnt in range(table_col_size-1):
+    trv.heading(cnt+1, text=str(column_titles[cnt+1]))
+# trv.heading(1, text="Customer ID")
+# trv.heading(2, text="First Name")
+# trv.heading(3, text="Last Name")
+# trv.heading(4, text="Age")
 # trv.heading('#0', width=50, minwidth=100)
 # trv.heading('#1', width=150, minwidth=200)
 # trv.heading('#2', width=150, minwidth=100)
@@ -264,10 +269,8 @@ btn.pack(side=tk.LEFT, padx=6)
 # multiple entry boxes
 my_entries = []
 for cnt in range(table_col_size-1):
-    print(cnt)
-    print(str(column_titles[cnt]))
     # Label each entry box
-    label_entry = tk.Label(wrapper3, text =str(column_titles[cnt]))
+    label_entry = tk.Label(wrapper3, text =str(column_titles[cnt+1]))
     label_entry.grid(row = 0, column = cnt, pady=20, padx=5)
     #lbl.pack(side=tk.LEFT, padx=10)
     my_entry=Entry(wrapper3)
