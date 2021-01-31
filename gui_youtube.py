@@ -26,6 +26,7 @@ global cursor
 #         connection.commit()
 #         print("Record inserted successfully into Laptop table")
 
+selected_id=""
 # This function should be improved later:
 # main -> table variable
 # number of input vars is automatically read from table 
@@ -52,6 +53,36 @@ def add_new_record():
     mydb.commit()
     refresh_table()
     print("Record inserted successfully into Laptop table")
+
+# https://www.youtube.com/watch?v=i4qLI9lmkqw&ab_channel=CodeWorked
+# 43:57
+def update_row():
+    record_entry=[]
+    for entries in my_entries:
+        entry_list=record_entry.append(entries.get())
+    record_entry.append(selected_id)
+    print(record_entry)
+    if tkMessageBox.askyesno("Confirm", "Are You Sure Update?"):
+        update_query = """UPDATE main SET device=%s, pcb_main=%s, c_sensor=%s, c_oled=%s, note=%s WHERE id=%s
+                            """
+        cursor.execute(update_query, tuple(record_entry))
+        #clear()
+        refresh_table()
+    else:
+        return True
+    mydb.commit()
+
+# https://www.youtube.com/watch?v=i4qLI9lmkqw&ab_channel=CodeWorked
+# 43:57
+def delete_row():
+    if tkMessageBox.askyesno("Confirm", "Are You Sure Delete?"):
+        query = "DELETE FROM main WHERE id = "+str(selected_id)
+        cursor.execute(query)
+        #clear()
+        refresh_table()
+    else:
+        return True
+    mydb.commit()
 
 def submitact():
     user = Username.get()
@@ -135,7 +166,7 @@ def search():
     rows = cursor.fetchall()
     update(rows)
 # event handler for treeview table
-selected_id=""
+
 def getrow(event):
     global selected_id
     #rowid=trv.indentify_row(event.y)
@@ -145,26 +176,7 @@ def getrow(event):
     for i in range(table_col_size-1):
         entry_text[i].set(item['values'][i+1])
 
-# https://www.youtube.com/watch?v=i4qLI9lmkqw&ab_channel=CodeWorked
-# 43:57
-def update_row():
-    record_entry=[]
-    for entries in my_entries:
-        entry_list=record_entry.append(entries.get())
-    record_entry.append(selected_id)
-    print(record_entry)
-    if tkMessageBox.askyesno("Confirm", "Are You Sure Update?"):
-        update_query = """UPDATE main SET device=%s, pcb_main=%s, c_sensor=%s, c_oled=%s, note=%s WHERE id=%s
-                            """
-        #print("**tp1**")
-        #print(selected_id)
-        #print((tuple(record_entry),selected_id))
-        cursor.execute(update_query, tuple(record_entry))
-        #clear()
-        refresh_table()
-    else:
-        return True
-    mydb.commit()
+
 
 mydb = mysql.connector.connect(host="localhost", user="root", passwd="cxzzxcCC", database="m3_knan", auth_plugin="mysql_native_password")
 cursor = mydb.cursor() 
@@ -311,6 +323,10 @@ updateButton = tk.Button(wrapper3, text ="UPDATE",
 
 updateButton.grid(row = 2, column=1, pady = 20)
 
+deleteButton = tk.Button(wrapper3, text ="DELETE", 
+                       bg ='blue', command = delete_row)
+
+deleteButton.grid(row = 2, column=2, pady = 20)
 
 root.title("My Application")
 root.geometry("1200x800")
