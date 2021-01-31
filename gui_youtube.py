@@ -6,7 +6,7 @@ import Tkinter
 import tkMessageBox
 import ttk
 import mysql.connector
-
+import PIL
 table_name ="main"
 displayed_columns="device, pcb_main, c_sensor ,c_oled, note"
 global cursor
@@ -25,7 +25,6 @@ global cursor
 #         cursor.execute(mySql_insert_query, recordTuple)
 #         connection.commit()
 #         print("Record inserted successfully into Laptop table")
-
 
 def add_new_record():
     print("adding new record")
@@ -56,9 +55,7 @@ def add_new_record():
 def submitact():
     user = Username.get()
     passw = password.get()
- #   print(f"The name entered by you is {user} {passw}")
     logintodb(user, passw)
-    
 
 def logintodb(user, passw):
     global db
@@ -70,14 +67,6 @@ def logintodb(user, passw):
                                      user = user,
                                      password = passw,
                                      db ="m3_knan")
-         
-    # If no password is enetered by the
-    # user
-    else:
-        db = mysql.connector.connect(host ="localhost",
-                                     user = user,
-                                     db ="m3_knan")
-
     cursor = db.cursor()
 
 def descb_table():
@@ -144,6 +133,11 @@ def search():
     cursor.execute(query)
     rows = cursor.fetchall()
     update(rows)
+# event handler for treeview table
+def getrow(event):
+    #rowid=trv.indentify_row(event.y)
+    item = trv.item(trv.focus())
+    print(item['values'][0])
 
 mydb = mysql.connector.connect(host="localhost", user="root", passwd="cxzzxcCC", database="m3_knan", auth_plugin="mysql_native_password")
 cursor = mydb.cursor() 
@@ -158,24 +152,13 @@ myresult = cursor.fetchall()
 # get table's number of columns
 table_col_size = len(myresult)
 print("There's "+str(table_col_size)+" cols in this table")
-
-# for x in myresult:
-#     print(x)
-# print("Query Excecuted successfully")
 table_query = "SELECT * FROM "+table_name
 
 cursor.execute(table_query)
 myresult = cursor.fetchall()
 
-
 table_row_size = cursor.rowcount
 print("There's "+str(table_row_size)+" rows in this table")
-
-# for x in myresult:
-#     print(x)
-# print("Query Excecuted successfully")
-
-print("******")
 column_titles = [i[0] for i in cursor.description]
 print(column_titles)
 
@@ -210,7 +193,8 @@ for cnt in range(table_col_size-1):
 # trv.heading('#3', width=150, minwidth=200)
 # trv.heading('#4', width=150, minwidth=200)
 
-#trv.bind('<Button 1>', toggle2)
+trv.bind('<Double 1>', getrow)
+
 yscrollbar = ttk.Scrollbar(wrapper1, orient="vertical", command=trv.yview)
 yscrollbar.pack(side=RIGHT, fill="y")
 
@@ -240,7 +224,7 @@ password.place(x = 150, y = 50, width = 100)
 
 submitbtn = tk.Button(wrapper0, text ="Login", 
                       bg ='blue', command = submitact)
-submitbtn.place(x = 150, y = 100, width = 55)
+submitbtn.place(x = 150, y = 70, width = 55)
  
 descbButton = tk.Button(wrapper0, text ="descb", 
       bg ='blue', command = descb_table)
@@ -268,12 +252,24 @@ btn.pack(side=tk.LEFT, padx=6)
 # create new record wrapper
 # multiple entry boxes
 my_entries = []
+
+# strings = []
+
+# for i in range(3):
+# Create a list of 3 empty strings
+
+#     strings.append("")
+
+# print(strings)
+# https://www.kite.com/python/answers/how-to-make-an-array-of-strings-in-python
+entry_text = []
 for cnt in range(table_col_size-1):
     # Label each entry box
+    entry_text.append("")
     label_entry = tk.Label(wrapper3, text =str(column_titles[cnt+1]))
     label_entry.grid(row = 0, column = cnt, pady=20, padx=5)
     #lbl.pack(side=tk.LEFT, padx=10)
-    my_entry=Entry(wrapper3)
+    my_entry=Entry(wrapper3, textvariable=entry_text[cnt])
     my_entry.grid(row=1, column=cnt, pady=20, padx=5)
     my_entries.append(my_entry)
 

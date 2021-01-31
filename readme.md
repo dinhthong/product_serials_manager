@@ -9,7 +9,7 @@ Fetch the table's data. -> Display it to Terminal -> done
 Query the SQL database and show it as table in Tkinter GUI.
 
 ## 16h04
-display correct column name by featching table's description.
+- display correct column name by featching table's description. -> done
 Login into -> Select table to work with -> Show update column names accordingly.
 - Add refresh table button. (It can updated from the Internet), there maybe conflict when updating table ... when it's connected to a network.
 -> Currently it can't be done unless we close the app and run it again.
@@ -36,3 +36,7 @@ https://stackoverflow.com/questions/61889352/tkinter-how-do-i-dynamically-change
 + Show date which the new entry is added to NOTE.
 
 + Inactively move a part from this device to another, but user must provide reason -> action date and logged into ... the database system
+
+# 31 Jan 21
++ Get selected/focus item/index in Treeview
+- Add eventlistener to Treeview table
