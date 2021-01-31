@@ -8,7 +8,7 @@ import ttk
 import mysql.connector
 import PIL
 table_name ="main"
-displayed_columns="device, pcb_main, c_sensor ,c_oled, note"
+displayed_columns="id, device, pcb_main, c_sensor ,c_oled, note"
 global cursor
 
 # def insertVariblesIntoTable(id, name, price, purchase_date):
@@ -26,6 +26,9 @@ global cursor
 #         connection.commit()
 #         print("Record inserted successfully into Laptop table")
 
+# This function should be improved later:
+# main -> table variable
+# number of input vars is automatically read from table 
 def add_new_record():
     print("adding new record")
 
@@ -48,9 +51,6 @@ def add_new_record():
 
     mydb.commit()
     print("Record inserted successfully into Laptop table")
-# with conn.cursor() as cursor:
-#     cursor.execute(insert_movies_query)
-#     conn.commit() 
 
 def submitact():
     user = Username.get()
@@ -137,7 +137,30 @@ def search():
 def getrow(event):
     #rowid=trv.indentify_row(event.y)
     item = trv.item(trv.focus())
-    print(item['values'][0])
+    for i in range(table_col_size-1):
+        entry_text[i].set(item['values'][i+1])
+
+# https://www.youtube.com/watch?v=i4qLI9lmkqw&ab_channel=CodeWorked
+# 43:57
+# def update_row():
+#     record_entry=[]
+#     for entries in my_entries:
+#         entry_list=record_entry.append(entries.get())
+#     print(record_entry)
+#     if messagebox.askyesno("Confirm", "Are You Sure Update?"):
+#         query = ""
+#     mySql_insert_query = """UPDATE main SET device, pcb_main, c_sensor, c_oled, note) 
+#                                 VALUES (%s, %s, %s, %s, %s) """
+#     #recordTuple = (id, name, price, purchase_date)
+#     #insert_movies_query = """
+#     # INSERT INTO main (device, pcb_main, c_sensor, c_oled, note)
+#     # VALUES
+#     # ("++")
+#     # """
+#     cursor.execute(mySql_insert_query, tuple(record_entry))
+
+#     mydb.commit()
+#     return True
 
 mydb = mysql.connector.connect(host="localhost", user="root", passwd="cxzzxcCC", database="m3_knan", auth_plugin="mysql_native_password")
 cursor = mydb.cursor() 
@@ -177,12 +200,12 @@ wrapper3.pack(fill="both", expand="yes", padx=20, pady=10)
 trv=ttk.Treeview(wrapper1, show="headings", height="5")
 #print(list(range(1,table_col_size)))
 # specify column size based on actual table's column size
-trv["column"] = list(range(1,table_col_size))
+trv["column"] = list(range(1,table_col_size+1))
 trv.pack(side=LEFT) 
 trv.place(x=0, y=0)
 
-for cnt in range(table_col_size-1):
-    trv.heading(cnt+1, text=str(column_titles[cnt+1]))
+for cnt in range(table_col_size):
+    trv.heading(cnt+1, text=str(column_titles[cnt]))
 # trv.heading(1, text="Customer ID")
 # trv.heading(2, text="First Name")
 # trv.heading(3, text="Last Name")
@@ -265,11 +288,12 @@ my_entries = []
 entry_text = []
 for cnt in range(table_col_size-1):
     # Label each entry box
-    entry_text.append("")
+    var = StringVar()
+    entry_text.append(var)
     label_entry = tk.Label(wrapper3, text =str(column_titles[cnt+1]))
     label_entry.grid(row = 0, column = cnt, pady=20, padx=5)
     #lbl.pack(side=tk.LEFT, padx=10)
-    my_entry=Entry(wrapper3, textvariable=entry_text[cnt])
+    my_entry=Entry(wrapper3, textvariable=var)
     my_entry.grid(row=1, column=cnt, pady=20, padx=5)
     my_entries.append(my_entry)
 
@@ -277,7 +301,6 @@ submitrecordButton = tk.Button(wrapper3, text ="ADD",
                        bg ='blue', command = add_new_record)
 
 submitrecordButton.grid(row = 2, column=0, pady = 20)
-
 
 root.title("My Application")
 root.geometry("1200x800")
